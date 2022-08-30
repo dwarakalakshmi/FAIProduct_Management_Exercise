@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using DataContext;
 
 namespace Repositories
 {
@@ -10,18 +11,27 @@ namespace Repositories
     {
         // declare field of type DataContext
 
-        public ProductRepository(<parameter>)
+        public DataContext dataContext;
+
+        public ProductRepository()
         {
-            //initialize the DataContext field with parameter passed    
+            //initialize the DataContext field with parameter passed
+
+            dataContext = new DataContext(fileName,path);    
         }
 
         /*
          * this method should accept product data and add it to the product collection
          * 
          */
-        public <return_type> AddProduct(<parameter>)
+        public void AddProduct(int ProductId,string ProductName,float ProductPrice,bool InStock)
         {
             // code to add product to file, ensuring that product is not null
+
+            dataContext.AddProduct(this.ProductId,this.ProductName,this.ProductPrice,this.Instock);
+            
+
+
         }
 
 
@@ -31,9 +41,17 @@ namespace Repositories
          * 
          * the method should return true for success and false for invalid id 
          */
-        public <return_type> RemoveProduct(<parameter>)
+        public bool RemoveProduct(int ProductId)
         {
-            // code to remove product by the id provided from file as parameter    
+            // code to remove product by the id provided from file as parameter
+            Product product = GetProductById(id);
+            if(product.Contains(ProductId))
+            {
+                dataContext.CleanUp();
+                return true;
+            }
+            return false;
+            
         }
 
         /*
@@ -43,9 +61,46 @@ namespace Repositories
          * 
          * the method should return null for non-matching product name
          */
-        public <return_type> GetProduct(<parameter>)
+        public string GetProductByName(string ProductName)
         {
+            List<Product> products = GetAllProducts();
+            Product product = new Product(); 
+            if (products.Count > 0)
+            {
+                foreach(Product p in product)
+                {
+                    if(p.ProductName == ProductName)
+                    {
+                        product.ProductId = p.ProductId;
+                        product.ProductName = p.ProductName;
+                        product.ProductPrice = p.ProductPrice;
+                        product.InStock = p.InStock;
+                    }
+                }
+                return product;
 
+            }
+
+        }
+
+        public int GetProductById(int id)
+        {
+            List<Product> products = GetAllProducts();
+            Product product = new Product();
+            if(products.Count > 0)
+            {
+                foreach(Product p in products)
+                {
+                    if(p.ProductId == id)
+                    {
+                        product.ProductId = p.ProductId;
+                        product.ProductName = p.ProductName;
+                        product.ProductPrice = p.ProductPrice;
+                        product.InStock = p.InStock;
+                    }
+                }
+            }
+            return product;
         }
 
         /*
@@ -55,18 +110,16 @@ namespace Repositories
          * 
          * the method should return null for non-matching product id
          */
-        public <return_type> GetProduct(<parameter>)
-        {
-
-        }
+       
 
         
         /*
          * this method should return all items from the product collection
          */
-        public <return_type> GetAllProducts()
+        public List<Product> GetAllProducts()
         {
-
+            DataContext context = new DataContext(dataContext.fileName,dataContext.Path);
+            return dataContext.ReadProducts();
         }
     }
 }
