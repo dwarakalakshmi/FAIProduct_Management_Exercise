@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
+
 namespace test
 {
     [TestFixture]
@@ -14,13 +16,16 @@ namespace test
         {
             product = new Product
             {
-                Price = 2300,
-                ProductId = 1005,
-                ProductName = "Timex sports watch for men"
+                ProductPrice = 2300,
+                ProductID = 1005,
+                ProductName = "Timex sports watch for men",
+                InStock = true
             };
         }
 
-        [Test]
+
+
+       [Test]
         public void Should_Test_Product_Model()
         {
             Assert.That(product, Has.Property("ProductId").TypeOf<int>(),"Product must have property ProductId of type integer");
